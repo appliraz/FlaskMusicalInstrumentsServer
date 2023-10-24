@@ -3,7 +3,6 @@ from flask_cors import CORS
 import MusicalInstrumentsScraper
 from fileService import getFileName, getFullFileName
 import uuid
-from webdriver_manager.chrome import ChromeDriverManager
 
 import sys
 import os
