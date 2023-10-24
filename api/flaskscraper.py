@@ -5,9 +5,11 @@ from fileService import getFileName, getFullFileName
 import uuid
 from webdriver_manager.chrome import ChromeDriverManager
 
-#import sys
-
-#sys.path.append(".")
+import sys
+import os
+from os.path import dirname, abspath
+parent_dir = dirname(dirname(abspath(__file__)))
+sys.path.append(parent_dir)
 
 app = Flask(__name__)
 
