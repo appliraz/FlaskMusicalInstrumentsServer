@@ -1,6 +1,6 @@
 from openpyxl import Workbook, worksheet
 from openpyxl.styles import Font, Alignment
-from configurations import variablesService as vs
+import configurations.variablesService as vs
 from fileService import getFileStream
 
 
