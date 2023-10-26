@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/flaskscraper" }
+    { "source": "/api/(.*)", "destination": "/api/flaskscraper" }
   ]
 }
