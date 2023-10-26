@@ -2,14 +2,15 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 """ Import project modules """
 import configurations.variablesService as vs
 from ChromeDriverService import getSeleniumDriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
+
 
 
 
