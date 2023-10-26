@@ -1,5 +1,5 @@
 from configurations.websites_configs.websites_dict import websites_dict
-from configurations import variablesService as vs
+import configurations.variablesService as vs
 from scrap_scripts import SoupParser, SeleniumScrap, PaginationScrap
 
 def extractDomain(url: str):
