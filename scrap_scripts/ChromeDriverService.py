@@ -1,7 +1,7 @@
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
+#from webdriver_manager.chrome import ChromeDriverManager
 #import undetected_chromedriver as uc
 
 
@@ -14,11 +14,11 @@ def getChromeOptions():
 
 #chrome_driver = ChromeDriverManager().install()
 chrome_options = getChromeOptions()
-service = Service(ChromeDriverManager().install())
+#service = Service(ChromeDriverManager().install())
 
 def getSeleniumDriver():
     #driver = uc.Chrome(options=chrome_options)
-    driver = webdriver.Chrome(service=service, options = chrome_options)
+    driver = webdriver.Chrome(options = chrome_options)
     #driver = webdriver.Chrome(chrome_driver)
     return driver
 
