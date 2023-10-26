@@ -4,11 +4,6 @@ import MusicalInstrumentsScraper
 from fileService import getFileName, getFullFileName
 import uuid
 
-import sys
-import os
-from os.path import dirname, abspath
-parent_dir = dirname(dirname(abspath(__file__)))
-sys.path.append(parent_dir)
 
 app = Flask(__name__)
 
