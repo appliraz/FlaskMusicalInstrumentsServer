@@ -5,7 +5,7 @@ import requests
 
 """ Import project modules """
 import configurations.variablesService as vs
-from ChromeDriverService import getSeleniumDriver, isWebdriver
+from scrap_scripts.ChromeDriverService import getSeleniumDriver, isWebdriver
 import SoupParser
 
 
