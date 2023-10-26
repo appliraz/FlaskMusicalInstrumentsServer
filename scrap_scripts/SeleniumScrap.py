@@ -1,10 +1,3 @@
-""" Add parent package to project path """
-import sys
-import os
-from os.path import dirname, abspath
-parent_dir = dirname(dirname(abspath(__file__)))
-sys.path.append(parent_dir)
-
 """ Import extrnal packages """
 from selenium import webdriver
 from bs4 import BeautifulSoup
@@ -12,7 +5,7 @@ import time
 
 
 """ Import project modules """
-from configurations import variablesService
+import configurations.variablesService as vs
 from ChromeDriverService import getSeleniumDriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
