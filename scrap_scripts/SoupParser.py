@@ -1,16 +1,7 @@
-""" Add parent package to project path """
-import sys
-import os
-from os.path import dirname, abspath
-current_dir = dirname(abspath(__file__))
-parent_dir = dirname(current_dir)
-sys.path.append(current_dir)
-sys.path.append(parent_dir)
-
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from configurations import variablesService as vs
+import configurations.variablesService as vs
 import ProductPageScrap
 
 def getRelevantSoup(soup: BeautifulSoup, website_configs: dict):
