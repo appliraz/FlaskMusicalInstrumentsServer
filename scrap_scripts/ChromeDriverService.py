@@ -1,7 +1,6 @@
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
-#from flaskscraper import getChromeDriverManager
 from webdriver_manager.chrome import ChromeDriverManager
 
 
@@ -12,11 +11,12 @@ def getChromeOptions():
     chrome_options.add_argument('--disable-gpu')  # Disable GPU acceleration (may be required in some cases)
     return chrome_options
 
-chrome_driver = ChromeDriverManager(version='114.0.5735.90').install()
+#chrome_driver = ChromeDriverManager(version='114.0.5735.90').install()
 chrome_options = getChromeOptions()
+service = Service()
 
 def getSeleniumDriver():
-    driver = webdriver.Chrome(chrome_driver, options=chrome_options)
+    driver = webdriver.Chrome(service = service, options = chrome_options)
     #driver = webdriver.Chrome(chrome_driver)
     return driver
 
