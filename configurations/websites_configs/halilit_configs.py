@@ -24,7 +24,9 @@ upperprice_tag = "p"
 upperprice_class = "origin_price line-through text-center"
 lowerprice_tag = "span"
 lowerprice_class = "price center-price-in-grid text-center" #center-price-in-grid text-center
-lowerprice_css_class = "span.price.center-price-in-grid.text-center.center_price.PriceChecked"
+lowerprice_css_class = "price.center-price-in-grid.text-center.center_price.PriceChecked"
+
+
 img_source = base64_imgs['halilit']
 #"https://drive.google.com/uc?export=view&id=1oB0IW0byTOZNOc2wwi06jijox1NdtwwA"
 
@@ -43,7 +45,7 @@ website_configs[vs.product_list_price]['tag'] = upperprice_tag
 website_configs[vs.product_list_price]['class'] = upperprice_class
 website_configs[vs.product_price]['tag'] = lowerprice_tag
 website_configs[vs.product_price]['class'] = lowerprice_class
-website_configs[vs.product_price]['css_class'] = lowerprice_class
+website_configs[vs.product_price]['css_class'] = lowerprice_css_class
 website_configs[vs.hebrew_name] = hebrew_name
 website_configs[vs.english_name] = english_name
 website_configs[vs.logo_src] = img_source

@@ -29,19 +29,22 @@ def scrollToTheBottom(driver: webdriver.Chrome):
     max_scrolls = variablesService.max_scrolls
     current_scroll = 0
     while True and current_scroll<max_scrolls:
-        print("scroll")
-        driver.execute_script(f"window.scrollTo(0, {last_height*0.8});")
-        # Wait for the page to load
-        time.sleep(4)
-        # Get the new height of the page
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        
-        # If the page height hasn't changed, we've reached the end of the page
-        if new_height == last_height and current_scroll > 2:
-            break
-        
-        last_height = new_height
-        current_scroll += 1
+        try:
+            print("scroll")
+            driver.execute_script(f"window.scrollTo(0, {last_height});")
+            # Wait for the page to load
+            time.sleep(4)
+            # Get the new height of the page
+            new_height = driver.execute_script("return document.body.scrollHeight")
+            
+            # If the page height hasn't changed, we've reached the end of the page
+            if new_height == last_height and current_scroll > 2:
+                break
+            
+            last_height = new_height
+            current_scroll += 1
+        except Exception as e:
+            print(e)
     
 def getSoup(driver):
     soup = BeautifulSoup(driver.page_source, 'html.parser')

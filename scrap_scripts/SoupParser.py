@@ -89,11 +89,10 @@ def getParameter(item: BeautifulSoup, website: dict, param: str, value_if_error=
     print("\ngetParameter called\n")
     try:
         element = findElement(item, website, param)
-        if param == vs.product_price:
-            print(f"elemenet contents = {len(element.contents)}")
-        param_text = getTextFromElement(element, param)
-        if param == vs.product_price:
+        if param == vs.product_price: #logging 
             print(f"found element: {element}\n\n\n")
+            print(f"elemenet contents = {len(element.contents)}")       
+        param_text = getTextFromElement(element, param)
     except Exception as e:
         print(e)
         param_text = value_if_error
@@ -156,17 +155,27 @@ def findElement(item: BeautifulSoup, website: dict, param: str):
     param_tag = website[param]['tag']
     param_class = website[param]['class']
     elem = findElementByTagClass(item, param_tag, param_class)
-    if not elem is None:
-        return elem
-    param_css_class = website[param]['css_class']
-    elem = findElementByCssClass(item, param_css_class)
+    if elem is None and param == vs.product_price:
+        param_css_class = website[param]['css_class']
+        elem = findElementByCssClass(item, param_css_class)
     return elem
 
 
 def findElementByCssClass(item: BeautifulSoup, elem_css_class: str):
+    print(f"called findElementByCssClass with {elem_css_class}")
     if elem_css_class is None:
+        print("no css class provided")
         return None
-    return item.select(elem_css_class)
+    find_css_class = elem_css_class.replace(".", " ")
+    elem = item.find(class_ = find_css_class)
+    if elem is None:
+        print("find css class failed")
+        try:
+            elem = item.select(elem_css_class)
+        except Exception as e:
+            print("failed on findElementByCssClass")
+            print(e)
+    return elem
 
 
 def findElementByTagClass(element: BeautifulSoup, elem_tag, elem_class=None):
@@ -179,13 +188,17 @@ def findElementByTagClass(element: BeautifulSoup, elem_tag, elem_class=None):
 
 def getTextFromElement(elem: BeautifulSoup, param: str):
     # lower-price elements usually contained within the contents of the price tag, otherwise it can be extract from the tag text
+    print(f"getTextFromElement called with element {elem}")
     if param == vs.product_price and len(elem.contents) > 1:
         return getTextUsingContents(elem)
     return elem.get_text(strip=True)
 
 
 def getTextUsingContents(elem: BeautifulSoup):
-    for i in range(len(elem.contents)):
+    print(f"getTextUsingContents called with element {elem}")
+    no_of_contents = len(elem.contents)
+    print(f"found {no_of_contents} contents")
+    for i in range(no_of_contents):
         text = elem.contents[i]
         print(f"text is {text}")
         price = cleanupPrice(text)
@@ -210,7 +223,7 @@ def getTextUsingContents(elem: BeautifulSoup):
 
 def cleanupPrice(price: str):
     if price is None or not isinstance(price, str):
-        return price
+        return None
     clean_price = ""
     for char in price:
         if char.isdigit():
