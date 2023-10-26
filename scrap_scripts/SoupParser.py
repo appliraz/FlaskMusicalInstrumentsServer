@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import configurations.variablesService as vs
-import scrap_scripts.ProductPageScrap
+import scrap_scripts.ProductPageScrap as ProductPageScrap
 
 def getRelevantSoup(soup: BeautifulSoup, website_configs: dict):
     main_website_tag = website_configs[vs.main_html_element]['tag']
