@@ -1,12 +1,3 @@
-import sys
-import os
-from os.path import dirname, abspath
-current_dir = dirname(abspath(__file__))
-parent_dir = dirname(current_dir)
-grandparent_dir = dirname(parent_dir)
-sys.path.append(parent_dir)
-sys.path.append(grandparent_dir)
-
 import variablesService as vs
 from .websites_logos.base64_logos import base64_imgs
 
