@@ -1,6 +1,8 @@
 from configurations.websites_configs.websites_dict import websites_dict
 import configurations.variablesService as vs
-from scrap_scripts import SoupParser, SeleniumScrap, PaginationScrap
+import scrap_scripts.SoupParser as SoupParser
+import scrap_scripts.SeleniumScrap as SeleniumScrap
+import scrap_scripts.PaginationScrap as PaginationScrap
 
 def extractDomain(url: str):
     domain = url.replace("https://", "").replace("www.", "")
