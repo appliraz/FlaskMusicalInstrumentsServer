@@ -1,10 +1,3 @@
-""" Add parent package to project path """
-import sys
-import os
-from os.path import dirname, abspath
-parent_dir = dirname(dirname(abspath(__file__)))
-sys.path.append(parent_dir)
-
 from configurations.websites_configs.websites_dict import websites_dict
 from configurations import variablesService as vs
 from scrap_scripts import SoupParser, SeleniumScrap, PaginationScrap
