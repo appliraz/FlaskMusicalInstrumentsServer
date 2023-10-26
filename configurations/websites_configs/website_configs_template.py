@@ -1,4 +1,4 @@
-import variablesService as vs
+import configurations.variablesService as vs
 from .websites_logos.base64_logos import base64_imgs
 
 # When you want to scrap a new website, use this template to configure all the website specific parameters and variables
