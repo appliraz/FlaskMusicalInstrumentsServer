@@ -1,22 +1,10 @@
-""" Add parent package to project path """
-import sys
-import os
-from os.path import dirname, abspath
-current_dir = dirname(abspath(__file__))
-parent_dir = dirname(current_dir)
-sys.path.append(current_dir)
-sys.path.append(parent_dir)
-
-
-#print(sys.path)
-
 """ Import extrnal packages """
 from bs4 import BeautifulSoup
 import requests
 
 
 """ Import project modules """
-from configurations import variablesService as vs
+import configurations.variablesService as vs
 from ChromeDriverService import getSeleniumDriver, isWebdriver
 import SoupParser
 
