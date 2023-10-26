@@ -1,4 +1,4 @@
-import variablesService as vs
+import configurations.variablesService as vs
 from .websites_logos.base64_logos import base64_imgs
 
 
