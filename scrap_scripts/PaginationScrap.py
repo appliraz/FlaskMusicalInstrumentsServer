@@ -6,7 +6,7 @@ import requests
 """ Import project modules """
 import configurations.variablesService as vs
 from scrap_scripts.ChromeDriverService import getSeleniumDriver, isWebdriver
-import SoupParser
+import scrap_scripts.SoupParser as SoupParser
 
 
 def getTextToScrap(loader, url: str, first_page: int, website_configs: dict) -> str:
