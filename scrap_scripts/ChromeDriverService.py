@@ -12,7 +12,7 @@ def getChromeOptions():
     chrome_options.add_argument('--disable-gpu')  # Disable GPU acceleration (may be required in some cases)
     return chrome_options
 
-chrome_driver = ChromeDriverManager().install()
+chrome_driver = ChromeDriverManager(version='114.0.5735.90').install()
 chrome_options = getChromeOptions()
 
 def getSeleniumDriver():
