@@ -9,7 +9,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 """ Import project modules """
 import configurations.variablesService as vs
-from ChromeDriverService import getSeleniumDriver
+from scrap_scripts.ChromeDriverService import getSeleniumDriver
 
 
 
