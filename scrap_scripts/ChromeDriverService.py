@@ -28,6 +28,8 @@ def getChromeOptions():
     chrome_options.add_argument("--disk-cache-size=0")
     chrome_options.add_argument("--log-level=3")
     chrome_options.add_argument("--output=/dev/null")
+    chrome_options.add_argument("--user-data-dir=/tmp")
+
 
     return chrome_options
 
