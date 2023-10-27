@@ -1,4 +1,5 @@
-from selenium.webdriver.chrome.options import Options
+#from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
 #from webdriver_manager.chrome import ChromeDriverManager
@@ -39,7 +40,7 @@ chrome_options = getChromeOptions()
 
 def getSeleniumDriver():
     #driver = uc.Chrome(options=chrome_options)
-    driver = webdriver.Chrome(options = chrome_options)
+    driver = webdriver.Firefox(options = chrome_options)
     #driver = webdriver.Chrome(chrome_driver)
     return driver
 
