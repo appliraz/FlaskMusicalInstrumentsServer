@@ -25,6 +25,7 @@ def getChromeOptions():
     chrome_options.add_argument("--disable-in-process-stack-traces")
     chrome_options.add_argument("--disable-logging")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disk-cache-size=0")
     chrome_options.add_argument("--log-level=3")
     chrome_options.add_argument("--output=/dev/null")
 
