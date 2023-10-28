@@ -1,12 +1,24 @@
+""" Add parent package to project path """
+import sys
+import os
+from os.path import dirname, abspath
+current_dir = dirname(abspath(__file__))
+parent_dir = dirname(current_dir)
+sys.path.append(current_dir)
+sys.path.append(parent_dir)
+
+
+#print(sys.path)
+
 """ Import extrnal packages """
 from bs4 import BeautifulSoup
 import requests
 
 
 """ Import project modules """
-import configurations.variablesService as vs
-from scrap_scripts.ChromeDriverService import getSeleniumDriver, isWebdriver
-import scrap_scripts.SoupParser as SoupParser
+from configurations import variablesService as vs
+from ChromeDriverService import getSeleniumDriver, isWebdriver
+import SoupParser
 
 
 def getTextToScrap(loader, url: str, first_page: int, website_configs: dict) -> str:
@@ -25,6 +37,7 @@ def getTextToScrap(loader, url: str, first_page: int, website_configs: dict) -> 
         print("\nscrap_text\n")
         page += 1
         current_url = getNextUrl(url, page)
+        print(f"current url = {current_url}")
         try:
             res = requestUrl(loader, current_url)
         except Exception as e:
@@ -54,7 +67,16 @@ def getSoup(url: str, first_page: int, website_configs: dict, method):
     closePageLoader(method, loader)
     if not scrap_text:
         raise Exception("Something went wrong and no text was found")
-    full_bowl_of_soup = BeautifulSoup(scrap_text, 'html.parser')
+    try:
+        full_bowl_of_soup = BeautifulSoup(scrap_text, 'html.parser')
+        #print(f"bowl of soup length is {len(str(full_bowl_of_soup))}")
+        """
+        with open ('file.txt', 'w', encoding='utf-8') as file:
+            file.write(str(full_bowl_of_soup.prettify()))
+        """
+    except Exception as e:
+        print(e)
+        full_bowl_of_soup = None
     return full_bowl_of_soup
 
 
@@ -173,11 +195,13 @@ def getLastPage(first_page_res, website_configs: dict):
     page_soup = BeautifulSoup(first_page_res.text, "html.parser")
     try:
         last_page = SoupParser.getLastPage(page_soup, website_configs)
+        last_page = last_page if last_page < vs.max_pages else vs.max_pages
         print(f"\nlast page is : {last_page}")
         return last_page
     except Exception as e:
         print(e)
         return vs.max_pages
+    
     
 def getLastPageFromText(page_text: str, website_configs:dict):
     try:

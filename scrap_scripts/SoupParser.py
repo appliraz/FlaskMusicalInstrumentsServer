@@ -1,8 +1,17 @@
-from bs4 import BeautifulSoup
+""" Add parent package to project path """
+import sys
+import os
+from os.path import dirname, abspath
+current_dir = dirname(abspath(__file__))
+parent_dir = dirname(current_dir)
+sys.path.append(current_dir)
+sys.path.append(parent_dir)
+
+from bs4 import BeautifulSoup, ResultSet
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-import configurations.variablesService as vs
-import scrap_scripts.ProductPageScrap as ProductPageScrap
+from configurations import variablesService as vs
+import ProductPageScrap
 
 def getRelevantSoup(soup: BeautifulSoup, website_configs: dict):
     main_website_tag = website_configs[vs.main_html_element]['tag']
@@ -10,7 +19,7 @@ def getRelevantSoup(soup: BeautifulSoup, website_configs: dict):
     if(not main_website_tag or not main_website_class):
         return soup
     try:
-        soup = soup.find(main_website_tag, class_ = main_website_class)
+        soup = soup.find_all(main_website_tag, class_ = main_website_class)
     except Exception as e:
         print(e)
     return soup
@@ -68,12 +77,19 @@ def extractParameters(item: BeautifulSoup, website: dict):
 def getItems(soup: BeautifulSoup, website: dict):
     items_tag = website[vs.product_element]['tag']
     items_class = website[vs.product_element]['class']
+    items = []
     try:
-        items = soup.find_all(items_tag, class_ = items_class)
+        if type(soup) == BeautifulSoup:
+            items = soup.find_all(items_tag, class_ = items_class)
+        elif type(soup) == ResultSet:
+            for soup_element in soup:
+                items.extend(soup_element.find_all(items_tag, class_ = items_class))
+        else:
+            print(f"unexpected type of soup = {type(soup)}, trying to extract items anyway")
+            items = soup.find_all(items_tag, class_ = items_class)
     except Exception as e:
         print(f"could not find items by the provided items tag and class:\n{items_tag} {items_class}\ncheck exception below, returning empty array")
         print(e)
-        items = []
     return items
 
 def getParameter(item: BeautifulSoup, website: dict, param: str, value_if_error=None):
@@ -246,6 +262,8 @@ def getLastPage(first_page_soup: BeautifulSoup, website_configs: dict):
     print(website_configs)
     container_tag = website_configs[vs.pagination]['container']['tag']
     container_class = website_configs[vs.pagination]['container']['class']
+    if container_tag == None:
+        return vs.max_pages
     pagination_bar = first_page_soup.find(container_tag, class_ = container_class)
     print("pagination bar")
     print(pagination_bar)
@@ -267,3 +285,13 @@ def getLastPage(first_page_soup: BeautifulSoup, website_configs: dict):
         last_page = vs.max_pages
     return last_page
 
+def combineSoupList(soup):
+    if type(soup) is list:
+        print("soup is list")
+        combined_soup = ""
+        for soup_element in soup:
+            combined_soup += str(soup_element.prettify())
+        combined_soup = BeautifulSoup(combined_soup, 'html.parser')
+        print("combined soup ready")
+        return combined_soup
+    return soup
