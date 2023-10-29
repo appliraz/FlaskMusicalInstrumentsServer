@@ -11,41 +11,31 @@ import variablesService as vs
 from .websites_logos.base64_logos import base64_imgs
 
 
-website_key = "DIEZ" 
-base_url = "https://www.diez.co.il/"
-item_tag = "a"
-item_class = "woocommerce-LoopProduct-link woocommerce-loop-product__link"
-name_tag = "h2"
-name_class = "woocommerce-loop-product__title"
-upperprice_tag = "del" 
-upperprice_class = None
-lowerprice_tag = "bdi"
-lowerprice_class = None
-lowerprice_css_class = "span.woocommerce-Price-amount.amount"
-hebrew_name = "דיאז"
-english_name = "Diez"
-img_source = base64_imgs['diez']
-#"https://drive.google.com/uc?export=view&id=1mMzbXMNLJtB9HA4pHKUzcGJfeY929Tph"
 
-method = vs.pagination_method
+website_key = "HALILIT"
+hebrew_name = "חלילית"
+english_name = "Halilit"
+base_url = "https://www.halilit.com/"
+item_tag = "div"
+item_class = "grid row border_grid max-width-responsive margin-responsive articles max-height-responsive"
+name_tag = "h1"
+name_class = None
+upperprice_tag = "p"
+upperprice_class = "origin_price line-through text-center"
+lowerprice_tag = "span"
+lowerprice_class = "price center-price-in-grid text-center" #center-price-in-grid text-center
+lowerprice_css_class = "price.center-price-in-grid.text-center.center_price.PriceChecked"
 
+
+img_source = base64_imgs['halilit']
+#"https://drive.google.com/uc?export=view&id=1oB0IW0byTOZNOc2wwi06jijox1NdtwwA"
+
+method = vs.selenium_method
 main_html_tag = None
 main_html_class = None
 
-
-# try to scrap the pagination bar:
-pagination_container_tag = "ul"
-pagination_container_class = "page-numbers"
-pagination_item_tag = "li"
-pagination_item_class = None
-
-paginate = vs.extension_indicator + "page/" + vs.page_index
-
-""" ! When you finished don't forget to add the new website you've configs to websites_dict ! """
-
-# Don't change the following
-
 website_configs = vs.getWebsiteConfigs()
+
 website_configs[vs.website_url] = base_url
 website_configs[vs.product_element]['tag'] = item_tag
 website_configs[vs.product_element]['class'] = item_class
@@ -56,11 +46,6 @@ website_configs[vs.product_list_price]['class'] = upperprice_class
 website_configs[vs.product_price]['tag'] = lowerprice_tag
 website_configs[vs.product_price]['class'] = lowerprice_class
 website_configs[vs.product_price]['css_class'] = lowerprice_css_class
-website_configs[vs.pagination]['container']['tag'] =  pagination_container_tag
-website_configs[vs.pagination]['container']['class'] =  pagination_container_class
-website_configs[vs.pagination]['item']['tag'] = pagination_item_tag
-website_configs[vs.pagination]['item']['class'] = pagination_item_class
-website_configs[vs.pagination]['indicator'] = paginate
 website_configs[vs.hebrew_name] = hebrew_name
 website_configs[vs.english_name] = english_name
 website_configs[vs.logo_src] = img_source

@@ -1,4 +1,13 @@
-import configurations.variablesService as vs
+import sys
+import os
+from os.path import dirname, abspath
+current_dir = dirname(abspath(__file__))
+parent_dir = dirname(current_dir)
+grandparent_dir = dirname(parent_dir)
+sys.path.append(parent_dir)
+sys.path.append(grandparent_dir)
+
+import variablesService as vs
 from .websites_logos.base64_logos import base64_imgs
 
 
@@ -20,8 +29,7 @@ lowerprice_css_class = "span.saleprice"
 
 img_source = base64_imgs['kzpro']
 
-method = vs.dynamic_method
-
+method = vs.pagination_method
 
 main_html_tag = None
 main_html_class = None

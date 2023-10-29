@@ -17,30 +17,34 @@ import requests
 
 """ Import project modules """
 from configurations import variablesService as vs
+from ChromeDriverService import getSeleniumDriver, isWebdriver
 import SoupParser
 
 
-def getTextToScrap(url: str, first_page: int, website_configs: dict) -> str:
-    # page number yelds url yelds responds yelds text to scrap 
-    session = requests.Session()
-    last_page = getLastPage(session, url, website_configs)
+def getTextToScrap(loader, url: str, first_page: int, website_configs: dict) -> str:
+    page = first_page
+    current_url = getNextUrl(url, page)
+    res = requestUrl(loader, current_url)
     scrap_text = ""
-    for page in range(first_page, last_page+1):
+    first_page_text = getTextFromResponse(loader, res)
+    last_page = getLastPageFromText(first_page_text, website_configs)
+    print(f"going to load with current url = {current_url}")
+    while page <= last_page and isStatusCodeOK(current_url):
         print(f"page = {page}")
-        current_url = getNextUrl(url, page)
-        print(f"current url = {current_url}")
-        res = requestUrl(session, current_url)
-        if res is None or not res.status_code == 200:
-            print(f"requests to url {current_url} failed with status code = {res.status_code}")
-            break
-        page_text = getTextFromResponse(res)
+        page_text = getTextFromResponse(loader, res)
         if not page_text or areNoItemsInPage(page_text, website_configs):
             break
         scrap_text += page_text
-    session.close()
+        print("\nscrap_text\n")
+        page += 1
+        current_url = getNextUrl(url, page)
+        print(f"current url = {current_url}")
+        try:
+            res = requestUrl(loader, current_url)
+        except Exception as e:
+            print(e)
+            break
     return scrap_text
-
-
 
 def areNoItemsInPage(page_text: str, website_configs: dict) -> bool:
     items_tag = website_configs[vs.product_element]['tag']
@@ -48,32 +52,41 @@ def areNoItemsInPage(page_text: str, website_configs: dict) -> bool:
     item = BeautifulSoup(page_text, 'html.parser').find(items_tag, class_ = items_class)
     return item is None
 
+def getPageLoader(method):
+    if method==vs.pagination_method:
+        return requests.Session()
+    elif method==vs.dynamic_method:
+        return getSeleniumDriver()
+    else:
+        raise Exception(f"Unknown method for page loader in getPageLoader(), method = {method}")
 
+def closePageLoader(method, loader):
+    if method==vs.pagination_method:
+        loader.close()
+    elif method==vs.dynamic_method:
+        loader.quit()
+    else:
+        raise Exception(f"Unknown method for page loader in getPageLoader(), method = {method}")    
 
-
-def getSoup(url: str, first_page: int, website_configs: dict):
-    scrap_text = getTextToScrap(url, first_page, website_configs)
+def getSoup(url: str, first_page: int, website_configs: dict, method):
+    loader = getPageLoader(method)
+    scrap_text = getTextToScrap(loader, url, first_page, website_configs)
+    closePageLoader(method, loader)
     if not scrap_text:
         raise Exception("Something went wrong and no text was found")
     try:
         full_bowl_of_soup = BeautifulSoup(scrap_text, 'html.parser')
+        #print(f"bowl of soup length is {len(str(full_bowl_of_soup))}")
+        """
+        with open ('file.txt', 'w', encoding='utf-8') as file:
+            file.write(str(full_bowl_of_soup.prettify()))
+        """
     except Exception as e:
         print(e)
         full_bowl_of_soup = None
     return full_bowl_of_soup
 
 
-def initSoup(url: str, website_configs: dict):
-    paginate_url, first_page = paginateUrl(url, website_configs)
-    print("\n\tpaginated")
-    print(paginate_url)
-    soup = getSoup(paginate_url, first_page, website_configs)
-    return soup
-
-
-
-
-""" Utility Pagination Functions """
 
 def paginateUrl(url: str, website_configs: dict):
     print(website_configs)
@@ -93,6 +106,20 @@ def paginateUrl(url: str, website_configs: dict):
         return paginate_url, first_page
     raise Exception(f"The configuration for website_pagination is invalid\nExcpected to have {vs.url_query_indicator} or {vs.extension_indicator} but none were found in {website_pagination}")
 
+
+def initSoup(url: str, website_configs: dict):
+    paginate_url, first_page = paginateUrl(url, website_configs)
+    print("\n\tpaginated")
+    print(paginate_url)
+    method= website_configs[vs.method]
+    soup = getSoup(paginate_url, first_page, website_configs, method)
+    return soup
+
+    
+
+
+
+""" Utility Functions """
 
 def appendQueryToUrl(url: str, website_pagination: str):
     if vs.url_query_indicator in url:
@@ -151,34 +178,26 @@ def getNextSignIndex(url: str):
             next_index = index
     return next_index
 
-def getTextFromResponse(response):
-    try:           
-        text = response.text
+def getTextFromResponse(loader, response):
+    try:
+        text = ""
+        if type(loader)==requests.Session:
+            text = response.text
+        elif isWebdriver(loader):
+            text = loader.page_source
+        else:
+            raise Exception("Unkown type for loader")
         return text
     except Exception as e:
-        print("could not get text from response")
         print(e)
         return ""
-    
-
-    
-
-
-""" Requests function"""
 
 def requestUrl(session: requests.Session, url: str) -> requests.Response:
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36'}
-    try:
-        res = session.get(url, headers=headers)
-        return res
-    except Exception as e:
-        print("failed in request url")
-        print(e)
-        return None
+    r = session.get(url, headers=headers)
+    return r
 
-
-def getLastPage(session: requests.Session, url: str, website_configs: dict) -> int:
-    first_page_res = session.get(url)
+def getLastPage(first_page_res, website_configs: dict):
     if first_page_res.status_code != 200:
         return vs.max_pages
     try:
@@ -192,27 +211,6 @@ def getLastPage(session: requests.Session, url: str, website_configs: dict) -> i
         return vs.max_pages
     
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def getLastPageFromText(page_text: str, website_configs:dict):
     try:
         page_soup = BeautifulSoup(page_text, "html.parser")
@@ -223,21 +221,6 @@ def getLastPageFromText(page_text: str, website_configs:dict):
         print(e)
         return vs.max_pages
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def isStatusCodeOK(url):
     status_code = requests.get(url).status_code
     if status_code == 403:

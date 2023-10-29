@@ -3,6 +3,7 @@ import sys
 import os
 from os.path import dirname, abspath
 
+from pythonScraper.scrap_scripts.old_selenium_scripts import SeleniumScrap
 parent_dir = dirname(dirname(abspath(__file__)))
 sys.path.append(parent_dir)
 
@@ -21,12 +22,20 @@ def getWebsiteKey(url):
             return key
     return None
 
+""" Mendatory to name the main scrapping function 'scrap' """
 def scrap(url):
     key = getWebsiteKey(url)
     print(f"key is {key}\n\n\n\n\n")
     website_configs = websites_dict[key]
-    soup = PaginationScrap.initSoup(url, website_configs)
+    scraping_method = website_configs[vs.method]
+    print(f'scraping method is {scraping_method}')
+    soup = SeleniumScrap.initSoup(url) if scraping_method == vs.selenium_method else PaginationScrap.initSoup(url, website_configs)
     print("returned with soup")
     data = SoupParser.parseSoup(soup, website_configs)
     return data
 
+"""
+if __name__ == "__main__":
+    scrap("https://www.halilit.com/23604-Studio-Monitors/33102-Mackie")
+    print("END")
+"""
